@@ -107,7 +107,7 @@ export class Upload extends Component {
               Form data
             </h3>
             <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-              <div className="col-span-1 rounded-md border border-dashed relative border-gray-200 dark:border-gray-600">
+              <div className="col-span-2 rounded-md border border-dashed relative border-gray-200 dark:border-gray-600">
                 <input
                   type="file"
                   accept="video/mp4, video/mpeg"
@@ -132,7 +132,7 @@ export class Upload extends Component {
                 </button>
               </div>
 
-              <div className="col-span-1">
+              <div className="col-span-2">
                 <video
                   ref={this.videoPlayer}
                   className="w-full rounded-md"
@@ -141,6 +141,7 @@ export class Upload extends Component {
                   <source src="" type="video/mp4" />
                 </video>
               </div>
+
               <div className="col-span-2">
                 <label
                   className="text-gray-700 dark:text-gray-200"
