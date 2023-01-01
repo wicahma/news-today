@@ -60,7 +60,11 @@ export class Upload extends Component {
       loading: true,
     });
     axios
-      .post(`${process.env.REACT_APP_API_POINT}/uploadFile`, videoData)
+      .post(`${process.env.REACT_APP_API_POINT}/uploadFile`, videoData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
       .then((res) => {
         axios
           .post(`${process.env.REACT_APP_API_POINT}/video`, {
