@@ -9,7 +9,7 @@ const Navbar = (props) => {
   const handleSearch = () => {
     search !== "" &&
       axios
-        .get(`http://localhost:4123/video/find/${search}`)
+        .get(`${process.env.REACT_APP_API_POINT}/video/find/${search}`)
         .then((res) => {
           props.dispatch({ type: "SET_SEARCH", dataSearch: res.data.data });
         })
@@ -18,7 +18,7 @@ const Navbar = (props) => {
 
   const handleSort = () => {
     axios
-      .get("http://localhost:4123/video/sort")
+      .get(`${process.env.REACT_APP_API_POINT}/video/sort`)
       .then((res) => {
         props.dispatch({ type: "SET_VIDEO", dataVideo: res.data.data });
       })

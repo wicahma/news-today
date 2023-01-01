@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { ClipLoader } from "react-spinners";
 import MoonLoader from "react-spinners/MoonLoader";
 
 export class Upload extends Component {
@@ -61,10 +60,10 @@ export class Upload extends Component {
       loading: true,
     });
     axios
-      .post(`http://localhost:4123/upload-file`, videoData)
+      .post(`${process.env.REACT_APP_API_POINT}/upload-file`, videoData)
       .then((res) => {
         axios
-          .post("http://localhost:4123/video", {
+          .post(`${process.env.REACT_APP_API_POINT}/video`, {
             urlVideoID: res.data.response.data.id,
             uploaderID: this.props.user._id,
             deskripsi: this.state.deskripsi,

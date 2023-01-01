@@ -28,7 +28,7 @@ export class Register extends Component {
 
   handleSend = (data) => {
     axios
-      .post("http://localhost:4123/user", data)
+      .post(`${process.env.REACT_APP_API_POINT}/user`, data)
       .then((res) => {
         console.log("user berhasil ditambahkan");
       })

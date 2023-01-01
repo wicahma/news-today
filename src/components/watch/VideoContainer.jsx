@@ -13,7 +13,7 @@ const VideoContainer = (props) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4123/video/${params.data}`)
+      .get(`${process.env.REACT_APP_API_POINT}/video/${params.data}`)
       .then((res) => {
         setVideo(res.data.data);
       })
@@ -24,7 +24,7 @@ const VideoContainer = (props) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4123/komentar/${params.data}`)
+      .get(`${process.env.REACT_APP_API_POINT}/komentar/${params.data}`)
       .then((res) => {
         setKomentar(res.data.data);
       })
@@ -35,7 +35,9 @@ const VideoContainer = (props) => {
 
   const handleOnclick = (id) => {
     axios
-      .delete(`http://localhost:4123/komentar/${id}&${props.user._id}`)
+      .delete(
+        `${process.env.REACT_APP_API_POINT}/komentar/${id}&${props.user._id}`
+      )
       .then((res) =>
         sendKomentar ? setSendkomentar(false) : setSendkomentar(true)
       )
@@ -46,7 +48,7 @@ const VideoContainer = (props) => {
     data === ""
       ? console.log("Komentar tidak ada")
       : axios
-          .post(`http://localhost:4123/komentar/`, {
+          .post(`${process.env.REACT_APP_API_POINT}/komentar/`, {
             uploaderID: props.user._id,
             videoID: params.data,
             komentar: data,

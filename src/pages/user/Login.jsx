@@ -19,7 +19,7 @@ export class Login extends Component {
 
   handleLogin = (mail, pass) => {
     axios
-      .get(`http://localhost:4123/user/${mail}&${pass}`)
+      .get(`${process.env.REACT_APP_API_POINT}/user/${mail}&${pass}`)
       .then((res) => {
         this.setState({ dataUser: res.data.data, loginStatus: true }, () => {
           this.props.dispatch({
@@ -147,7 +147,8 @@ export class Login extends Component {
                   </div>
 
                   <p className="mt-3 text-center">
-                    <Link to='/home'
+                    <Link
+                      to="/home"
                       className="text-blue-500 text-center focus:outline-none focus:underline hover:underline"
                     >
                       Masuk tanpa login

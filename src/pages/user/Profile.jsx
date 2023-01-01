@@ -27,11 +27,14 @@ export class Profile extends Component {
     if (data.password !== data.passwordConfirmation)
       return alert("Please enter a correct password");
     axios
-      .put(`http://localhost:4123/user/${this.props.dataUser._id}`, {
-        nama: this.state.dataUsers.nama,
-        email: this.state.dataUsers.email,
-        password: this.state.dataUsers.password,
-      })
+      .put(
+        `${process.env.REACT_APP_API_POINT}/user/${this.props.dataUser._id}`,
+        {
+          nama: this.state.dataUsers.nama,
+          email: this.state.dataUsers.email,
+          password: this.state.dataUsers.password,
+        }
+      )
       .then((res) => alert("data berhasil dirubah, silahkan login ulang!"))
       .catch((err) => alert("Error, data gagal dirubah!"));
   };

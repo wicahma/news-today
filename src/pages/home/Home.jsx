@@ -13,7 +13,7 @@ export class Home extends Component {
 
   getDataVideoAPI = () => {
     axios
-      .get("http://localhost:4123/videos")
+      .get(`${process.env.REACT_APP_API_POINT}/videos`)
       .then((res) => {
         this.setState({
           dataVideo: res.data.data,
