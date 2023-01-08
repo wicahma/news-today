@@ -61,11 +61,12 @@ export class Upload extends Component {
       this.setState({
         warning: true,
       });
-      return setTimeout(() => {
+      setTimeout(() => {
         this.setState({
           warning: false,
         });
       }, 1500);
+      return this.state.warning;
     }
 
     let videoData = new FormData();

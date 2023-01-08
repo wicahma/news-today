@@ -49,9 +49,10 @@ export class Register extends Component {
   handleSend = (data) => {
     if (this.handleCheckData()) {
       this.setState({ warning: true });
-      return setTimeout(() => {
+      setTimeout(() => {
         this.setState({ warning: false });
       }, 1500);
+      return this.state.warning;
     }
     this.setState({ loading: true });
     axios
