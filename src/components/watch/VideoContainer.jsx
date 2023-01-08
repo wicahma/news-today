@@ -84,7 +84,7 @@ const VideoContainer = (props) => {
     <div className="w-[93%] mx-auto pb-10">
       {error && <Error msg="Komentar gagal ditambahkan" />}
       {loading && (
-        <div className="fixed w-screen h-screen bg-black/50 flex justify-center items-center">
+        <div className="fixed w-screen h-screen left-0 top-0 bg-black/50 flex justify-center items-center">
           <MoonLoader color="#fff" size={40} loading={loading} />
         </div>
       )}
