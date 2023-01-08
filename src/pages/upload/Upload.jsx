@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import MoonLoader from "react-spinners/MoonLoader";
+import Error from "../../components/alert/Error";
+import Success from "../../components/alert/Success";
+import Warning from "../../components/alert/Warning";
 
 export class Upload extends Component {
   constructor(props) {
@@ -14,6 +17,9 @@ export class Upload extends Component {
       loading: false,
       deskripsi: "",
       judul: "",
+      warning: false,
+      error: false,
+      success: false,
     };
   }
 
@@ -51,8 +57,16 @@ export class Upload extends Component {
       this.state.file === "" ||
       this.state.judul === "" ||
       this.state.deskripsi === ""
-    )
-      return console.log("data kosong");
+    ) {
+      this.setState({
+        warning: true,
+      });
+      return setTimeout(() => {
+        this.setState({
+          warning: false,
+        });
+      }, 1500);
+    }
 
     let videoData = new FormData();
     videoData.append("file", this.state.file.data);
@@ -73,15 +87,27 @@ export class Upload extends Component {
             deskripsi: this.state.deskripsi,
             judul: this.state.judul,
           })
-          .then((res) => {
+          .then(() => {
             this.setState({
               loading: false,
+              success: true,
             });
+            setTimeout(() => {
+              this.setState({
+                success: false,
+              });
+            }, 1500);
           })
-          .catch((err) => {
+          .catch(() => {
             this.setState({
               loading: false,
+              error: true,
             });
+            setTimeout(() => {
+              this.setState({
+                error: false,
+              });
+            }, 1500);
           });
       })
       .catch((err) => {
@@ -95,6 +121,14 @@ export class Upload extends Component {
   render() {
     return (
       <div className="mt-32 mx-auto sm:w-[800px] w-[90%]">
+        {this.state.loading && (
+          <div className="fixed w-screen h-screen left-0 top-0 bg-black/50 flex justify-center items-center">
+            <MoonLoader color="#fff" size={40} loading={this.state.loading} />
+          </div>
+        )}
+        {this.state.error && <Error msg="Konten gagal diupload!" />}
+        {this.state.success && <Success msg="Konten berhasil diupload!" />}
+        {this.state.warning && <Warning msg="Isi data yang masih kosong!" />}
         <div className="relative w-full pt-5 bg-white shadow dark:bg-gray-800 rounded-xl">
           <h2 className=" font-semibold text-center text-3xl text-gray-800 dark:text-white">
             Upload Video
@@ -176,7 +210,6 @@ export class Upload extends Component {
             </div>
 
             <div className="flex gap-4 justify-end mt-6">
-              <MoonLoader color="#fff" size={30} loading={this.state.loading} />
               <button
                 type="button"
                 onClick={this.handleUploadData}

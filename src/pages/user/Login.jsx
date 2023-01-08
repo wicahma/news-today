@@ -2,7 +2,9 @@ import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
+import MoonLoader from "react-spinners/MoonLoader";
 import bgImage from "../../assets/img/mews.webp";
+import Error from "../../components/alert/Error";
 
 export class Login extends Component {
   constructor(props) {
@@ -14,32 +16,55 @@ export class Login extends Component {
       dataUser: [],
       loginStatus: null,
       loginMessage: "",
+      error: false,
+      loading: false,
     };
   }
 
   handleLogin = (mail, pass) => {
+    this.setState({ loading: true });
     axios
       .get(`${process.env.REACT_APP_API_POINT}/user/${mail}&${pass}`)
       .then((res) => {
-        this.setState({ dataUser: res.data.data, loginStatus: true }, () => {
-          this.props.dispatch({
-            type: "SET_USER",
-            dataUser: this.state.dataUser,
-          });
-          localStorage.setItem("dataUser", JSON.stringify(res.data.data));
-        });
+        this.setState(
+          { dataUser: res.data.data, loginStatus: true, loading: false },
+          () => {
+            this.props.dispatch({
+              type: "SET_USER",
+              dataUser: this.state.dataUser,
+            });
+            localStorage.setItem("dataUser", JSON.stringify(res.data.data));
+          }
+        );
       })
       .catch((err) => {
         this.setState({
           loginStatus: false,
           loginMessage: "Data yang anda masukkan masih salah",
+          error: true,
+          loading: false,
         });
+        setTimeout(() => {
+          this.setState({
+            error: false,
+          });
+        }, 1500);
       });
   };
 
   render() {
     return (
       <div className="bg-white dark:bg-gray-900">
+        {this.state.loginStatus === true ? (
+          <Navigate to={"/home"} />
+        ) : (
+          this.state.error === true && <Error msg={this.state.loginMessage} />
+        )}
+        {this.state.loading && (
+          <div className="fixed w-screen h-screen bg-black/50 flex justify-center items-center">
+            <MoonLoader color="#fff" size={40} loading={this.state.loading} />
+          </div>
+        )}
         <div className="flex justify-center h-screen">
           <div
             className="hidden bg-cover lg:block lg:w-2/3"
@@ -74,13 +99,6 @@ export class Login extends Component {
 
               <div className="mt-8">
                 <form>
-                  <div className="w-full rounded-md mb-3 bg-red-100 text-center text-red-600 dark:text-red-500">
-                    {this.state.loginStatus === true ? (
-                      <Navigate to={"/home"} />
-                    ) : (
-                      this.state.loginMessage
-                    )}
-                  </div>
                   <div>
                     <label
                       htmlFor="email"

@@ -1,7 +1,11 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import MoonLoader from "react-spinners/MoonLoader";
 import bgImage from "../../assets/img/mews.webp";
+import Error from "../../components/alert/Error";
+import Success from "../../components/alert/Success";
+import Warning from "../../components/alert/Warning";
 
 export class Register extends Component {
   constructor(props) {
@@ -13,6 +17,10 @@ export class Register extends Component {
         email: "",
         password: "",
       },
+      loading: false,
+      error: false,
+      success: false,
+      warning: false,
     };
   }
 
@@ -26,20 +34,58 @@ export class Register extends Component {
     });
   };
 
+  handleCheckData = () => {
+    let error;
+    for (const [key, value] of Object.entries(this.state.dataRegist)) {
+      if (value === "" || value === null) {
+        error = true;
+        break;
+      }
+      error = false;
+    }
+    return error;
+  };
+
   handleSend = (data) => {
+    if (this.handleCheckData()) {
+      this.setState({ warning: true });
+      return setTimeout(() => {
+        this.setState({ warning: false });
+      }, 1500);
+    }
+    this.setState({ loading: true });
     axios
       .post(`${process.env.REACT_APP_API_POINT}/user`, data)
       .then((res) => {
-        console.log("user berhasil ditambahkan");
+        this.setState({ success: true, loading: false });
       })
       .catch((err) => {
-        console.log("user gagal register");
+        this.setState({ error: true, loading: false });
+        setTimeout(() => {
+          this.setState({
+            error: false,
+          });
+        }, 1500);
       });
   };
 
   render() {
     return (
       <section className="bg-white dark:bg-gray-900">
+        {this.state.registStatus === true ? (
+          <Navigate to={"/home"} />
+        ) : (
+          this.state.error === true && <Error msg={"Register gagal!"} />
+        )}
+        {this.state.success === true && <Success msg={"Register Berhasil!"} />}
+        {this.state.warning === true && (
+          <Warning msg={"Isi data yang masih kosong!"} />
+        )}
+        {this.state.loading && (
+          <div className="fixed w-screen h-screen bg-black/50 flex justify-center items-center">
+            <MoonLoader color="#fff" size={40} loading={this.state.loading} />
+          </div>
+        )}
         <div className="flex justify-center min-h-screen">
           <div
             className="hidden bg-cover lg:block lg:w-2/5"
@@ -138,7 +184,7 @@ export class Register extends Component {
                   onClick={() => this.handleSend(this.state.dataRegist)}
                   className="flex items-center justify-between w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                 >
-                  <span>Regist </span>
+                  <span>Register </span>
 
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
+import Error from "../alert/Error";
 import Komentar from "./Komentar";
 
 const VideoContainer = (props) => {
@@ -10,6 +11,8 @@ const VideoContainer = (props) => {
   const [komentar, setKomentar] = useState();
   const [myKomentar, setMyKomentar] = useState();
   const [sendKomentar, setSendkomentar] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     axios
@@ -45,8 +48,9 @@ const VideoContainer = (props) => {
   };
 
   const handleSendData = (data) => {
+    setLoading(true);
     data === ""
-      ? console.log("Komentar tidak ada")
+      ? setLoading(false)
       : axios
           .post(`${process.env.REACT_APP_API_POINT}/komentar/`, {
             uploaderID: props.user._id,
@@ -54,10 +58,15 @@ const VideoContainer = (props) => {
             komentar: data,
           })
           .then((res) => {
+            setLoading(false);
             sendKomentar ? setSendkomentar(false) : setSendkomentar(true);
           })
           .catch((err) => {
-            console.log("Komentar gagal dibuat!");
+            setLoading(false);
+            setError(true);
+            setTimeout(() => {
+              setError(false);
+            }, 1500);
           });
   };
 
@@ -68,11 +77,12 @@ const VideoContainer = (props) => {
 
   return (
     <div className="w-[93%] mx-auto pb-10">
+      {error && <Error msg="Komentar gagal ditambahkan" />}
       <div className="relative rounded-xl overflow-hidden w-full pt-[56.25%]">
         <iframe
           src={
             video === undefined
-              ? "#"
+              ? ""
               : `https://drive.google.com/file/d/${video.urlVideoID}/preview`
           }
           className="w-full h-full absolute top-0 left-0 right-0 bottom-0  border-none"
