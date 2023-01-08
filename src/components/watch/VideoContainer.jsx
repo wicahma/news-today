@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
+import MoonLoader from "react-spinners/MoonLoader";
 import Error from "../alert/Error";
 import Komentar from "./Komentar";
 
@@ -15,24 +16,28 @@ const VideoContainer = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_POINT}/video/${params.data}`)
       .then((res) => {
         setVideo(res.data.data);
+        setLoading(false);
       })
       .catch((err) => {
-        console.log("video tidak ditemukan");
+        setLoading(false);
       });
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_POINT}/komentar/${params.data}`)
       .then((res) => {
         setKomentar(res.data.data);
+        setLoading(false);
       })
       .catch((err) => {
-        console.log("komentar tidak ada");
+        setLoading(false);
       });
   }, [sendKomentar]);
 
@@ -78,6 +83,11 @@ const VideoContainer = (props) => {
   return (
     <div className="w-[93%] mx-auto pb-10">
       {error && <Error msg="Komentar gagal ditambahkan" />}
+      {loading && (
+        <div className="fixed w-screen h-screen bg-black/50 flex justify-center items-center">
+          <MoonLoader color="#fff" size={40} loading={loading} />
+        </div>
+      )}
       <div className="relative rounded-xl overflow-hidden w-full pt-[56.25%]">
         <iframe
           src={
